@@ -2,7 +2,6 @@ Table User {
   id        Int     [pk, increment]
   username  String  [unique]
   password  String 
-  departments Department[]
 }
 
 Table Department {
@@ -11,7 +10,6 @@ Table Department {
   description String
   images String
   info String
-  owner User
   faculty Professor[]
 }
 
@@ -24,5 +22,4 @@ Table Professor {
   department Department
 }
 
-Ref: User.departments < Department.owner
 Ref: Department.faculty < Professor.department
