@@ -1,26 +1,37 @@
-const prisma = require('../prisma');
-const {faker} = require('@faker-js/faker');
+const prisma = require("../prisma");
+const { faker } = require("@faker-js/faker");
 
 const seed = async (numDepartments = 5, numProfessors = 20) => {
+  const departments = [];
+
+  // Create Departments
   for (let i = 0; i < numDepartments; i++) {
-    await prisma.department.create({
+    const department = await prisma.department.create({
       data: {
         name: faker.commerce.department(),
         description: faker.lorem.sentence(),
-        image: faker.image.avatar(),
-        info: faker.lorem.sentence(),
+        image: faker.image.urlPicsumPhotos(),
+        info: faker.lorem.paragraph(),
       },
     });
-    const Professors = Array.from({length: numProfessors}, () => ({
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      bio: faker.lorem.paragraph(),
-      image: faker.image.avatar(),
+    departments.push(department);
+  }
 
-      departmentId: i + 1,
-    }));
-    await prisma.professor.createMany({
-      data: Professors,
+  // Create Professors and assign to random departments
+  for (let i = 0; i < numProfessors; i++) {
+    const randomDepartment =
+      departments[Math.floor(Math.random() * departments.length)];
+
+    await prisma.professor.create({
+      data: {
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        bio: faker.lorem.paragraph(),
+        image: faker.image.avatar(),
+        department: {
+          connect: { id: randomDepartment.id },
+        },
+      },
     });
   }
 };
