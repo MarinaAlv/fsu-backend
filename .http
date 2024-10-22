@@ -1,0 +1,15 @@
+@host = http://localhost:3000
+
+### Get list of all professors
+GET {{host}}/faculty
+
+### Get a specific professor
+GET {{host}}/faculty/16
+
+### Professor does not exist
+GET {{host}}/faculty/400
+
+### Register a new user
+POST {{host}}/register
+
+### Update an existing professor's info
