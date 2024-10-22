@@ -4,16 +4,11 @@ const prisma = new PrismaClient().$extends({
   model: {
     user: {
       async register(username, password) {
-        try {
-          const hash = await bcrypt.hash(password, 10);
-          const user = await prisma.user.create({
-            data: { username, password: hash },
-          });
-          return user;
-        } catch (error) {
-          // Add error handling here to debug more specifically
-          throw new Error("User registration failed");
-        }
+        const hash = await bcrypt.hash(password, 10);
+        const user = await prisma.user.create({
+          data: { username, password: hash },
+        });
+        return user;
       },
       async login(username, password) {
         const user = await prisma.user.findUniqueOrThrow({
