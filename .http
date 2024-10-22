@@ -4,7 +4,7 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-    "username": "admin2@admin",
+    "username": "admin@admin",
     "password": "password2"
 }
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
     "username": "admin@admin",
-    "password": "password"
+    "password": "password2"
 }
 
 ### Get all the departments
@@ -36,4 +36,17 @@ Content-Type: application/json
     "image": "https://www.latimes.com/entertainment-arts/story/2022-08-07/la-et-comedy-issue-commentary-the-best-lesson-in-comedy-is-learning-how-to-laugh-at-yourself",
     "info": "departmentdepartmentdepartmentdepartmentdepartmentdepartment",
     "professors": [5,10,15]
+}
+
+### Add or remove professors
+PATCH {{host}}/departments/3
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "uuu",
+    "description": "rrr",
+    "image": "yyy",
+    "info": "hhh",
+    "professorIds": [1, 2, 3]
 }

@@ -77,4 +77,70 @@ router
     }
   });
 
+//   // PATCH /department/:id
+// router.patch("/:id", authenticate, async (req, res, next) => {
+//   const departmentId = req.params.id;
+//   const { name, description, bannerImage } = req.body;
+
+//   // Validate request body
+//   if (!name || !description || !bannerImage) {
+//       return res.status(400).json({ message: "Name, description, and banner image are required." });
+//   }
+
+//   try {
+//       // Check if the department exists
+//       const department = await Department.findByPk(departmentId);
+
+//       if (!department) {
+//           return res.status(404).json({ message: "Department not found." });
+//       }
+
+//       // Update the department details
+//       await department.update({
+//           name,
+//           description,
+//           bannerImage,
+//       });
+
+//       // Respond with the updated department
+//       res.status(200).json(department);
+//   } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: 'Internal Server Error.' });
+//   }
+// });
+
+router.patch("/:id", authenticate, async (req, res, next) => {
+  const { id } = req.params;
+  const { name, description, image, info, professorIds } = req.body; // Expecting an array of professor IDs
+
+  // Validate input
+
+  try {
+      // Check if the department exists
+      const department = await prisma.department.findUniqueOrThrow({ where:  { id: +id }});
+
+      if (!department) {
+          return next({status: 404,  message: 'Department not found.'});
+      }
+      
+      const faculty = professorIds.map((id) => ({id}));
+      const updatedDepartment = await prisma.department.update({
+        where: { id: +id },
+        data: {
+          name,
+          description,
+          image, 
+          info,
+          faculty: { connect: faculty }
+        },
+        include: { faculty: true }
+      });
+      res.json(updatedDepartment);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error." });
+  }
+});
+
 module.exports = router;
