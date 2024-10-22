@@ -3,6 +3,7 @@ const router = express.Router();
 
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
+const prisma = require("../prisma");
 
 /**
  * creates a token with the given id for the user to login
@@ -12,8 +13,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 function createToken(id) {
   return jwt.sign({ id }, JWT_SECRET, { expiresIn: "1d" });
 }
-
-const prisma = require("../prisma");
 
 //Verifies the token given by the user
 router.use(async (req, res, next) => {
@@ -47,8 +46,8 @@ router.post("/register", async (req, res, next) => {
     }
 
     const user = await prisma.user.register(username, password);
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1d" });
-    res.status(201).json(token);
+    const token = createToken(user.id);
+    res.status(201).json({ token });
   } catch (e) {
     next(e);
   }
