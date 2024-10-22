@@ -24,6 +24,13 @@ router
       const department = await prisma.department.findUniqueOrThrow({
         where: { id: +id },
       });
+
+      if (!department) {
+        return next({
+          status: 404,
+          message: `Department with id ${id} does not exist.`,
+        });
+      }
       res.status(201).json(department);
     } catch (e) {
       next(e);
@@ -79,32 +86,34 @@ router
 
 router.patch("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
-  const { name, description, image, info, professorIds } = req.body; 
+  const { name, description, image, info, professorIds } = req.body;
 
   try {
-      // Check if the department exists
-      const department = await prisma.department.findUniqueOrThrow({ where:  { id: +id }});
+    // Check if the department exists
+    const department = await prisma.department.findUniqueOrThrow({
+      where: { id: +id },
+    });
 
-      if (!department) {
-          return next({status: 404,  message: 'Department not found.'});
-      }
-      
-      const faculty = professorIds.map((id) => ({id}));
-      const updatedDepartment = await prisma.department.update({
-        where: { id: +id },
-        data: {
-          name,
-          description,
-          image, 
-          info,
-          faculty: { connect: faculty }
-        },
-        include: { faculty: true }
-      });
-      res.json(updatedDepartment);
+    if (!department) {
+      return next({ status: 404, message: "Department not found." });
+    }
+
+    const faculty = professorIds.map((id) => ({ id }));
+    const updatedDepartment = await prisma.department.update({
+      where: { id: +id },
+      data: {
+        name,
+        description,
+        image,
+        info,
+        faculty: { connect: faculty },
+      },
+      include: { faculty: true },
+    });
+    res.json(updatedDepartment);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal Server Error." });
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error." });
   }
 });
 

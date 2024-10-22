@@ -4,6 +4,10 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+//cors
+const cors = require("cors");
+app.use(cors({ origin: /localhost/ }));
+
 app.use(require("morgan")("dev"));
 app.use(express.json());
 
