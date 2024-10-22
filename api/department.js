@@ -48,6 +48,33 @@ router
     } catch (e) {
       next(e);
     }
+  })
+
+  .delete("/:id", authenticate, async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      // Check if the department exists
+      const department = await prisma.department.findUnique({
+        where: { id: +id },
+      });
+      console.log(department);
+      if (!department) {
+        return res.status(404).json({ message: "Department not found" });
+      }
+
+      await prisma.professor.updateMany({
+        where: { departmentId: +id },
+        data: { departmentId: null },
+      });
+
+      // Delete the department
+      await prisma.department.delete({ where: { id: +id } }); //may need to change
+      // Respond with a success message
+      res.status(204).send(); // 204 No Content
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   });
 
 module.exports = router;
