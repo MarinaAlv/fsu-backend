@@ -9,8 +9,8 @@ app.use(express.json());
 
 //Endpoints imports
 app.use(require("./api/auth").router);
-app.use("/departments", require("./api/department"));
-app.use("/faculty", require("./api/faculty"));
+// app.use("/departments", require("./api/department"));
+// app.use("/faculty", require("./api/faculty"));
 
 // First Error handlers middleware
 app.use((req, res, next) => {
