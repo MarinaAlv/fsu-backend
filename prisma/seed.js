@@ -24,7 +24,7 @@ const seed = async (numDepartments = 5, numProfessors = 20) => {
 
     await prisma.professor.create({
       data: {
-        name: faker.name.fullName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
         bio: faker.lorem.paragraph(),
         image: faker.image.avatar(),

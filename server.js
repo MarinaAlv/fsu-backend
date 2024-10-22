@@ -10,7 +10,7 @@ app.use(express.json());
 //Endpoints imports
 app.use(require("./api/auth").router);
 app.use("/departments", require("./api/department"));
-// app.use("/faculty", require("./api/faculty"));
+app.use("/faculty", require("./api/faculty"));
 
 // First Error handlers middleware
 app.use((req, res, next) => {
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status ?? 500);
-  res.json(err.message ?? "Sorry, somethin went bad:(");
+  res.json(err.message ?? "Sorry, something went bad:(");
 });
 
 app.listen(PORT, () => {
