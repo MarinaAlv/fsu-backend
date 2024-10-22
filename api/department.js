@@ -48,6 +48,64 @@ router
     } catch (e) {
       next(e);
     }
+  })
+
+  .delete("/:id", authenticate, async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      // Check if the department exists
+      const department = await prisma.department.findUnique({
+        where: { id: +id },
+      });
+      console.log(department);
+      if (!department) {
+        return res.status(404).json({ message: "Department not found" });
+      }
+
+      await prisma.professor.updateMany({
+        where: { departmentId: +id },
+        data: { departmentId: null },
+      });
+
+      // Delete the department
+      await prisma.department.delete({ where: { id: +id } }); //may need to change
+      // Respond with a success message
+      res.status(204).send(); // 204 No Content
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   });
+
+router.patch("/:id", authenticate, async (req, res, next) => {
+  const { id } = req.params;
+  const { name, description, image, info, professorIds } = req.body; 
+
+  try {
+      // Check if the department exists
+      const department = await prisma.department.findUniqueOrThrow({ where:  { id: +id }});
+
+      if (!department) {
+          return next({status: 404,  message: 'Department not found.'});
+      }
+      
+      const faculty = professorIds.map((id) => ({id}));
+      const updatedDepartment = await prisma.department.update({
+        where: { id: +id },
+        data: {
+          name,
+          description,
+          image, 
+          info,
+          faculty: { connect: faculty }
+        },
+        include: { faculty: true }
+      });
+      res.json(updatedDepartment);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error." });
+  }
+});
 
 module.exports = router;
