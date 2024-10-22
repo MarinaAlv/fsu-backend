@@ -34,5 +34,6 @@ Content-Type: application/json
     "name": "Comedy",
     "description": "loremipsiuhsufnsajndkjsandjksand",
     "image": "https://www.latimes.com/entertainment-arts/story/2022-08-07/la-et-comedy-issue-commentary-the-best-lesson-in-comedy-is-learning-how-to-laugh-at-yourself",
-    "faculty": [5,10,15]
+    "info": "departmentdepartmentdepartmentdepartmentdepartmentdepartment",
+    "professors": [5,10,15]
 }

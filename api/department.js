@@ -28,6 +28,26 @@ router
     } catch (e) {
       next(e);
     }
+  })
+
+  .post("/", authenticate, async (req, res, next) => {
+    const { name, description, image, info, professors } = req.body;
+    const faculty = professors.map((id) => ({ id }));
+
+    try {
+      const department = await prisma.department.create({
+        data: {
+          name,
+          description,
+          image,
+          info,
+          faculty: { connect: faculty },
+        },
+      });
+      res.status(201).json(department);
+    } catch (e) {
+      next(e);
+    }
   });
 
 module.exports = router;
