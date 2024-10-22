@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 module.exports = router;
 
+const { authenticate } = require("./auth");
 const prisma = require("../prisma");
 
+// Get the list of all professors (faculty)
 router.get("/", async (req, res, next) => {
   try {
     const faculty = await prisma.professor.findMany();
@@ -13,6 +15,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// Get the data for a single professor
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -20,6 +23,43 @@ router.get("/:id", async (req, res, next) => {
       where: { id: +id },
     });
     res.json(professor);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Create a new professor
+router.post("/", authenticate, async (req, res, next) => {
+  const { name, email, bio, image, departmentIds } = req.body;
+  try {
+    const department = departmentIds.map((id) => ({ id }));
+    const professor = await prisma.professor.create({
+      data: {
+        name,
+        email,
+        bio,
+        image,
+        department: { connect: department },
+      },
+    });
+    res.status(201).json(professor);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id", authenticate, async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const professor = await prisma.professor.findUnique({ where: { id: +id } });
+    if (!professor) {
+      return next({
+        status: 404,
+        message: `Professor with id ${id} does not exist.`,
+      });
+    }
+    await prisma.professor.delete({ where: { id: +id } });
+    res.sendStatus(204);
   } catch (error) {
     next(error);
   }
