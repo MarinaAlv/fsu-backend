@@ -38,6 +38,10 @@ Content-Type: application/json
     "professors": [5,10,15]
 }
 
+### Delete a department 
+DELETE {{host}}/departments/6
+Authorization: Bearer {{token}}
+
 ### Add or remove professors
 PATCH {{host}}/departments/3
 Authorization: Bearer {{token}}
@@ -60,7 +64,31 @@ GET {{host}}/faculty/16
 ### Professor does not exist
 GET {{host}}/faculty/400
 
-### Register a new user
-POST {{host}}/register
-
 ### Update an existing professor's info
+PATCH {{host}}/faculty/6
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Zedd",
+    "email": "telos@zedd.com",
+    "bio": "Listen to my new album, Telos!",
+    "departmentId": 2
+}
+
+### Create a professor
+POST {{host}}/faculty
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Crankdat",
+    "email": "rave@rave.com",
+    "bio": "bio",
+    "image": "uuu",
+    "department": 4
+}
+
+### Delete a professor
+DELETE {{host}}/faculty/21
+Authorization: Bearer {{token}}

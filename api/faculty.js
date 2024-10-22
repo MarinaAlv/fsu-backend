@@ -38,16 +38,16 @@ router.get("/:id", async (req, res, next) => {
 
 // Create a new professor
 router.post("/", authenticate, async (req, res, next) => {
-  const { name, email, bio, image, departmentIds } = req.body;
+  const { name, email, bio, image, department } = req.body;
   try {
-    const department = departmentIds.map((id) => ({ id }));
+    //const department1 = department.map((id) => ({ id }));
     const professor = await prisma.professor.create({
       data: {
         name,
         email,
         bio,
         image,
-        department: { connect: department },
+        departmentId: department,
       },
     });
     res.status(201).json(professor);
