@@ -90,5 +90,5 @@ Content-Type: application/json
 }
 
 ### Delete a professor
-DELETE {{host}}/faculty/21
+DELETE {{host}}/faculty/22
 Authorization: Bearer {{token}}

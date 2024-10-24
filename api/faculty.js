@@ -21,6 +21,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const professor = await prisma.professor.findUnique({
       where: { id: +id },
+      include: { department: true}
     });
 
     if (!professor) {
