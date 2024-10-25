@@ -23,6 +23,7 @@ router
     try {
       const department = await prisma.department.findUniqueOrThrow({
         where: { id: +id },
+        include: { faculty: true },
       });
 
       if (!department) {

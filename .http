@@ -14,8 +14,8 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-    "username": "admin@admin",
-    "password": "password2"
+    "username": "elwines@gmail.com",
+    "password": "123"
 }
 
 ### Get all the departments
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ### Delete a department 
-DELETE {{host}}/departments/6
+DELETE {{host}}/departments/10
 Authorization: Bearer {{token}}
 
 ### Add or remove professors

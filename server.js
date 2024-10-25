@@ -12,7 +12,7 @@ app.use(require("morgan")("dev"));
 app.use(express.json());
 
 //Endpoints imports
-app.use("/users", require("./api/auth").router);
+app.use("/", require("./api/auth").router);
 app.use("/departments", require("./api/department"));
 app.use("/faculty", require("./api/faculty"));
 
